@@ -23,12 +23,13 @@ typedef struct node {
 
 /* The method iterates over the tree nodes starting
 from the root and releases the memory of each node */
-void freeUpMemory(node *pointer) {
+int freeUpMemory(node *pointer) {
     for (int i = 0; i < NUM_LETTERS; i++) {
             if (pointer->children[i]!=NULL)
                 freeUpMemory(pointer->children[i]);
         }
     free(pointer);
+    return 0;
 }
 
 /* The method build a trie from the input char by char 
@@ -150,17 +151,18 @@ Otherwise, if there is another argument 'r' the method will
 construct the tree according to the input string and then
 print the word frequency in top-down lexicography order */
 int main(int argc, char *argv[]) {
-if (argc < 2) {
-    node *root = buildTrie();
-    if (root!=NULL&&root->childs!=0) {
-        char *str = "";
-        printBottomUp(root, root, str);
-        }
-} else if (argc == 2 && strcmp(argv[1], "r") == 0) {
-    node *root = buildTrie();
-    if (root!=NULL&&root->childs!=0) {
-        char *str = "";
-        printTopDown(root, root, str);
-        }
+    if (argc < 2) {
+        node *root = buildTrie();
+        if (root!=NULL&&root->childs!=0) {
+            char *str = "";
+            printBottomUp(root, root, str);
+            }
+    } else if (argc == 2 && strcmp(argv[1], "r") == 0) {
+        node *root = buildTrie();
+        if (root!=NULL&&root->childs!=0) {
+            char *str = "";
+            printTopDown(root, root, str);
+            }
     }
+    return 0;
 }
