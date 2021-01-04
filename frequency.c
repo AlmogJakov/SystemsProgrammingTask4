@@ -41,8 +41,12 @@ node* buildTrie() {
     node *root = malloc(sizeof(node));
     node *pointer = root;
     boolean prevIsAlphabet = 0;
-    while ((ch = getchar()) != '\0' && ch != EOF) {
-        if ((ch >= 'a'&&ch<= 'z')||(ch>='A'&&ch<='Z')) {
+    fseek (stdin, 0, SEEK_END);
+    int length = ftell (stdin);
+    fseek (stdin, 0, SEEK_SET);
+    /* if length!=-1 then redirection performed & continue reading stdin until feof(stdin) */
+    while (((ch = getchar()) != '\n' && ch != EOF) || (length!=-1 && !feof(stdin))) {
+        if ((ch >= 'a'&&ch<= 'z')||(ch>='A'&&ch<='Z')) { //
             ch = tolower(ch);
             prevIsAlphabet = TRUE;
             if (pointer->children[ch-'a']!=NULL) {
@@ -114,9 +118,6 @@ arg2 = iterate pointer starting from the root of the trie
 arg3 = chained string from the root of the trie to current node */
 int printTopDown(node *root, node *pointer, char *str) {
     if (pointer==NULL) return 0;
-    if (pointer->count>0) {
-        printf("%s\t%lu\n",str,pointer->count);
-    } 
     if (pointer->childs>0) {
         for (int i = NUM_LETTERS-1; i >= 0; i--) {
             if (pointer->children[i]!=NULL) {
@@ -133,6 +134,9 @@ int printTopDown(node *root, node *pointer, char *str) {
             }
         }
     }
+    if (pointer->count>0) {
+        printf("%s\t%lu\n",str,pointer->count);
+    } 
     free(pointer);
     return 0;
 }
@@ -149,14 +153,14 @@ int main(int argc, char *argv[]) {
 if (argc < 2) {
     node *root = buildTrie();
     if (root!=NULL&&root->childs!=0) {
-        char *ptr = "";
-        printBottomUp(root, root, ptr);
+        char *str = "";
+        printBottomUp(root, root, str);
         }
 } else if (argc == 2 && strcmp(argv[1], "r") == 0) {
     node *root = buildTrie();
     if (root!=NULL&&root->childs!=0) {
-        char *ptr = "";
-        printTopDown(root, root, ptr);
+        char *str = "";
+        printTopDown(root, root, str);
         }
     }
 }
