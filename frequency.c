@@ -6,7 +6,7 @@
 #include <stdlib.h>
 /* For strings methods (strcpy, strcat, strcmp, strlen) */
 #include <string.h>
-/* define */
+/* Define */
 #define NUM_LETTERS 26
 #define EXIT_FAILURE 1
 
@@ -40,7 +40,7 @@ node* buildTrie() {
     char ch;
     node *root = malloc(sizeof(node));
     node *pointer = root;
-    boolean prevIsAlphabet = 0;
+    boolean prevIsAlphabet = FALSE;
     fseek (stdin, 0, SEEK_END);
     int length = ftell (stdin);
     fseek (stdin, 0, SEEK_SET);
@@ -87,7 +87,7 @@ arg3 = chained string from the root of the trie to current node */
 int printBottomUp(node *root, node *pointer, char *str) {
     if (pointer==NULL) return 0;
     if (pointer->count>0) {
-        printf("%s\t%lu\n",str,pointer->count);
+        printf("%s %lu\n",str,pointer->count);
     } 
     if (pointer->childs>0) {
         for (int i = 0; i < NUM_LETTERS; i++) {
@@ -135,7 +135,7 @@ int printTopDown(node *root, node *pointer, char *str) {
         }
     }
     if (pointer->count>0) {
-        printf("%s\t%lu\n",str,pointer->count);
+        printf("%s %lu\n",str,pointer->count);
     } 
     free(pointer);
     return 0;
