@@ -58,6 +58,7 @@ node* buildTrie() {
                     fprintf(stderr, "malloc() failed: insufficient memory!\n");
                     freeUpMemory(root);
                     root = NULL;
+                    return root;
                 }
                 newnode->letter = ch;
                 newnode->count = 0;
