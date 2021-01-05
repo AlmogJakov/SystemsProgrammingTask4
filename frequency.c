@@ -39,7 +39,9 @@ chains the letter to the appropriate place in the tree
 while updating the appropriate fields. */
 node* buildTrie() {
     char ch;
-    node *root = malloc(sizeof(node));
+    node *root = calloc(1,sizeof(node));
+    for (int i = 0; i<NUM_LETTERS; i++)
+        root->children[i]=NULL;
     node *pointer = root;
     boolean prevIsAlphabet = FALSE;
     fseek (stdin, 0, SEEK_END);
@@ -53,7 +55,7 @@ node* buildTrie() {
             if (pointer->children[ch-'a']!=NULL) {
                 pointer = pointer->children[ch-'a'];
             } else {
-                node *newnode = malloc(sizeof(node));
+                node *newnode = calloc(1,sizeof(node));
                 if (!newnode) {
                     fprintf(stderr, "malloc() failed: insufficient memory!\n");
                     freeUpMemory(root);
@@ -63,6 +65,8 @@ node* buildTrie() {
                 newnode->letter = ch;
                 newnode->count = 0;
                 newnode->childs = 0;
+                for (int i = 0; i<NUM_LETTERS; i++)
+                    newnode->children[i]=NULL;
                 pointer->childs++;
                 pointer->children[ch-'a'] = newnode;
                 pointer = newnode;
@@ -93,7 +97,7 @@ int printBottomUp(node *root, node *pointer, char *str) {
     } 
     if (pointer->childs>0) {
         for (int i = 0; i < NUM_LETTERS; i++) {
-            if (pointer->children[i]!=NULL) {
+            if (pointer->children[i]!=NULL) { // !=NULL
                 char *res = malloc(strlen(str) + 1 + 1);
                 if (!res) {
                     fprintf(stderr, "malloc() failed: insufficient memory!\n");
