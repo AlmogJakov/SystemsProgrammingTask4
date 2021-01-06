@@ -49,7 +49,7 @@ node* buildTrie() {
     fseek (stdin, 0, SEEK_SET);
     /* if length!=-1 then redirection performed & continue reading stdin until feof(stdin) */
     while (((ch = getchar()) != '\n' && ch != EOF) || (length!=-1 && !feof(stdin))) {
-        if ((ch >= 'a'&&ch<= 'z')||(ch>='A'&&ch<='Z')) { //
+        if ((ch >= 'a'&&ch<= 'z')||(ch>='A'&&ch<='Z')) {
             ch = tolower(ch);
             prevIsAlphabet = TRUE;
             if (pointer->children[ch-'a']!=NULL) {
@@ -57,14 +57,12 @@ node* buildTrie() {
             } else {
                 node *newnode = calloc(1,sizeof(node));
                 if (!newnode) {
-                    fprintf(stderr, "malloc() failed: insufficient memory!\n");
+                    fprintf(stderr, "calloc() failed: insufficient memory!\n");
                     freeUpMemory(root);
                     root = NULL;
                     return root;
                 }
                 newnode->letter = ch;
-                newnode->count = 0;
-                newnode->childs = 0;
                 for (int i = 0; i<NUM_LETTERS; i++)
                     newnode->children[i]=NULL;
                 pointer->childs++;
@@ -72,10 +70,11 @@ node* buildTrie() {
                 pointer = newnode;
             }
         } else {
-            if (prevIsAlphabet)
+            if (prevIsAlphabet && (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r')) {
                 pointer->count++;
-            pointer = root;
-            prevIsAlphabet = FALSE;
+                pointer = root;
+                prevIsAlphabet = FALSE;
+            }
         }
     }
     if (pointer!=root)
@@ -97,7 +96,7 @@ int printBottomUp(node *root, node *pointer, char *str) {
     } 
     if (pointer->childs>0) {
         for (int i = 0; i < NUM_LETTERS; i++) {
-            if (pointer->children[i]!=NULL) { // !=NULL
+            if (pointer->children[i]!=NULL) {
                 char *res = malloc(strlen(str) + 1 + 1);
                 if (!res) {
                     fprintf(stderr, "malloc() failed: insufficient memory!\n");
@@ -158,15 +157,25 @@ print the word frequency in top-down lexicography order */
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         node *root = buildTrie();
-        if (root!=NULL&&root->childs!=0) {
+        /* check insufficient memory failure */
+        if (root==NULL)
+            return 1;
+        if (root->childs!=0) {
             char *str = "";
-            printBottomUp(root, root, str);
+            /* check insufficient memory failure */
+            if (printBottomUp(root, root, str) == 1)
+                return 1;
             }
     } else if (argc == 2 && strcmp(argv[1], "r") == 0) {
         node *root = buildTrie();
-        if (root!=NULL&&root->childs!=0) {
+        /* check insufficient memory failure */
+        if (root==NULL)
+            return 1;
+        if (root->childs!=0) {
             char *str = "";
-            printTopDown(root, root, str);
+            /* check insufficient memory failure */
+            if (printTopDown(root, root, str) == 1)
+                return 1;
             }
     }
     return 0;
