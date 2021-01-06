@@ -160,23 +160,19 @@ int main(int argc, char *argv[]) {
         /* check insufficient memory failure */
         if (root==NULL)
             return 1;
-        if (root->childs!=0) {
-            char *str = "";
-            /* check insufficient memory failure */
-            if (printBottomUp(root, root, str) == 1)
-                return 1;
-            }
+        char *str = "";
+        /* check insufficient memory failure */
+        if (printBottomUp(root, root, str) == 1)
+            return 1;
     } else if (argc == 2 && strcmp(argv[1], "r") == 0) {
         node *root = buildTrie();
         /* check insufficient memory failure */
         if (root==NULL)
             return 1;
-        if (root->childs!=0) {
-            char *str = "";
-            /* check insufficient memory failure */
-            if (printTopDown(root, root, str) == 1)
-                return 1;
-            }
+        char *str = "";
+        /* check insufficient memory failure */
+        if (printTopDown(root, root, str) == 1)
+            return 1;
     }
     return 0;
 }
